@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
 
         transform.position += movDir * moveSpeed * Time.deltaTime;
 
+        // Smoothly rotate towards movement direction
         transform.forward = Vector3.Slerp(transform.forward, movDir, rotationSpeed * Time.deltaTime);
     }
 }
