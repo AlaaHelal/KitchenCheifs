@@ -11,8 +11,6 @@ public class InputManager : MonoBehaviour
     public Vector2 GetMovementVectorNormalized() {
 
         Vector2 inputVector = inputActions.Player.Move.ReadValue<Vector2>();
-
-        Debug.Log("Input Vector: " + inputVector);
         return inputVector.normalized;
 
         /*
