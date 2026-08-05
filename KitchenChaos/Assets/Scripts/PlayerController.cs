@@ -1,47 +1,41 @@
 using System;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
+
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private InputManager inputManager;
     [SerializeField] private LayerMask interactLayerMask;
 
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
-    public class OnSelectedCounterChangedEventArgs : EventArgs
-    {
+    public class OnSelectedCounterChangedEventArgs : EventArgs {
         public ClearCounter selectedCounter;
     }
+    public static PlayerController Instance { get; private set; }
 
     private bool isWalking;
     private Vector3 lastInteractDir;
     private ClearCounter selectedCounter;
-    public static PlayerController Instance { get; private set; }
+    
 
-    private void Awake()
-    {
-        if (Instance != null)
-        {
+    private void Awake() {
+        if (Instance != null) {
             Debug.LogError("There is more than one PlayerController instance");
         }
         Instance = this;
     }
 
-    private void Start()
-    {
+    private void Start() {
         inputManager.OnInteractAction += InputManager_OnInteractAction;
     }
 
-    private void InputManager_OnInteractAction(object sender, EventArgs e)
-    {
-        if(selectedCounter != null)
-        {
+    private void InputManager_OnInteractAction(object sender, EventArgs e) {
+        if (selectedCounter != null) {
             selectedCounter.Interact();
         }
     }
 
-    private void Update()
-    {
+    private void Update() {
         //Move the player 
         HandleMovement();
 
@@ -49,13 +43,11 @@ public class PlayerController : MonoBehaviour
         HandlInteractions();
     }
 
-    public bool IsWalking()
-    {
+    public bool IsWalking() {
         return isWalking;
     }
 
-    private void HandleMovement()
-    {
+    private void HandleMovement() {
         //Get the input vector and convert it to a 3D movement direction
         Vector2 inputVector = inputManager.GetMovementVectorNormalized();
         Vector3 movDir = new Vector3(inputVector.x, 0, inputVector.y);
@@ -68,8 +60,7 @@ public class PlayerController : MonoBehaviour
         Vector3 pointB = transform.position + Vector3.up * playerHeight;
         bool canMove = !Physics.CapsuleCast(pointA, pointB, playerRadius, movDir, movDistance);
 
-        if (!canMove)
-        {
+        if (!canMove) {
             //Cannot move towards movDir, attempt to move along individual axes (split movdir)
 
             //Attempt to move only along the X axis
@@ -78,24 +69,21 @@ public class PlayerController : MonoBehaviour
             if (canMove)
                 //Move only along X axis
                 movDir = moveDirX;
-            else
-            {
+            else {
                 //Attempt to move only along the Z axis
                 Vector3 moveDirZ = new Vector3(0, 0, movDir.z).normalized;
                 canMove = !Physics.CapsuleCast(pointA, pointB, playerRadius, moveDirZ, movDistance);
                 if (canMove)
                     //Move only along Z axis
                     movDir = moveDirZ;
-                else
-                {
+                else {
                     //Cannot move along either axis, do not move
                 }
             }
         }
 
         //Move the player if possible
-        if (canMove)
-        {
+        if (canMove) {
             transform.position += movDir * moveSpeed * Time.deltaTime;
         }
 
@@ -107,50 +95,38 @@ public class PlayerController : MonoBehaviour
         isWalking = movDir != Vector3.zero;
     }
 
-    private void HandlInteractions()
-    {
+    private void HandlInteractions() {
         Vector2 inputVector = inputManager.GetMovementVectorNormalized();
         Vector3 movDir = new Vector3(inputVector.x, 0, inputVector.y);
 
-        if (movDir != Vector3.zero)
-        {
+        if (movDir != Vector3.zero) {
             lastInteractDir = movDir;
         }
 
         float interactDistance = 2f;
-        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, interactLayerMask))
-        {
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, interactLayerMask)) {
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)) {
 
-                if (clearCounter != selectedCounter)
-                {
+                if (clearCounter != selectedCounter) {
                     SetSelectedCounter(clearCounter);
 
                 }
-            }
-            else
-            {
+            } else {
                 SetSelectedCounter(null);
             }
-        }
-        else
-        {
+        } else {
             SetSelectedCounter(null);
         }
-
-        Debug.Log(selectedCounter);
     }
 
 
-    private void SetSelectedCounter(ClearCounter selectedCounter)
-    {
+    private void SetSelectedCounter(ClearCounter selectedCounter) {
+
         this.selectedCounter = selectedCounter;
-        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
-        {
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs {
             selectedCounter = selectedCounter
         });
 
     }
-        
+
 }
