@@ -29,6 +29,13 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent {
 
     private void Start() {
         inputManager.OnInteractAction += InputManager_OnInteractAction;
+        inputManager.OnInteractAlternateAction += InputManager_OnInteractAlternateAction;
+    }
+
+    private void InputManager_OnInteractAlternateAction(object sender, EventArgs e) {
+        if (selectedCounter != null) {
+            selectedCounter.InteractAlternate(this);
+        }
     }
 
     private void InputManager_OnInteractAction(object sender, EventArgs e) {
@@ -67,14 +74,15 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent {
 
             //Attempt to move only along the X axis
             Vector3 moveDirX = new Vector3(movDir.x, 0, 0).normalized;
-            canMove = !Physics.CapsuleCast(pointA, pointB, playerRadius, moveDirX, movDistance);
+            canMove = movDir.x !=0 && !Physics.CapsuleCast(pointA, pointB, playerRadius, moveDirX, movDistance);
+            
             if (canMove)
                 //Move only along X axis
                 movDir = moveDirX;
             else {
                 //Attempt to move only along the Z axis
                 Vector3 moveDirZ = new Vector3(0, 0, movDir.z).normalized;
-                canMove = !Physics.CapsuleCast(pointA, pointB, playerRadius, moveDirZ, movDistance);
+                canMove = movDir.z !=0 && !Physics.CapsuleCast(pointA, pointB, playerRadius, moveDirZ, movDistance);
                 if (canMove)
                     //Move only along Z axis
                     movDir = moveDirZ;

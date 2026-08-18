@@ -7,12 +7,13 @@ public class ContainerCounter : BaseCounter {
 
     public event EventHandler OnPlayerGrabbedObject;
     public override void Interact(PlayerController player) {
-        
-            Transform kitchenObjectPrefab = Instantiate(kitchenObjectSO.prefab);
-            kitchenObjectPrefab.GetComponent<KitchenObjects>().SetKitchenObjectParent(player);
-            OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
-        
-        
+        if (!player.HasKitchenObject()) {
+
+            //player is not carrying anything, so give them the kitchen object
+            KitchenObjects.SpawnKichenObject(player, kitchenObjectSO);
+
+            OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty); 
+        }
     }
     
 }

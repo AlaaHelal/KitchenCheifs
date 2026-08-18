@@ -19,9 +19,9 @@ public class KitchenObjects : MonoBehaviour
 
         this.kitchenObjectParent = kitchenObjectParent;
 
-        if (kitchenObjectParent.HasKitchenObject()){ 
-            Debug.LogError("Parent already has a kitchen object!");
-        }
+        //if (kitchenObjectParent.HasKitchenObject()){ 
+        //    Debug.LogError("Parent already has a kitchen object!");
+        //}
 
         kitchenObjectParent.SetKichenObject(this);
 
@@ -31,6 +31,19 @@ public class KitchenObjects : MonoBehaviour
 
     public IKitchenObjectParent GetKitchenObjectParent() {
         return kitchenObjectParent;
+    }
+
+    public void DestroySelf() {
+        kitchenObjectParent.ClearKichenObject();
+        Destroy(gameObject);
+    }
+
+    public static KitchenObjects SpawnKichenObject(IKitchenObjectParent kitchenObjectParent, KitchenObjectsSO kitchenObjectsSO) {
+        //Transform kitchenObjectPrefab = Instantiate(kitchenObjectsSO.prefab);
+
+        KitchenObjects kitchenObject = Instantiate(kitchenObjectsSO.prefab).GetComponent<KitchenObjects>();
+        kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
+        return kitchenObject;
     }
 
     }

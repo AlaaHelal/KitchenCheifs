@@ -1,9 +1,8 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class ClearCounter : BaseCounter {
-
-    
+public class CuttingCounter : BaseCounter
+{
+    [SerializeField] private KitchenObjectsSO slicedObjectPrefab;
 
     public override void Interact(PlayerController player) {
         if (!HasKitchenObject()) {
@@ -25,6 +24,15 @@ public class ClearCounter : BaseCounter {
             } else {
                 // Player is carrying something = Do nothing  
             }
+        }
+    }
+
+    public override void InteractAlternate(PlayerController player) {
+        if (HasKitchenObject()) {
+            // There is a kitchen object here? Destroy it first and then spawn the sliced one
+            GetKitchenObject().DestroySelf();
+            KitchenObjects.SpawnKichenObject(this, slicedObjectPrefab);
+
         }
     }
 }

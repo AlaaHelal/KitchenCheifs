@@ -71,6 +71,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 797801083431045789, guid: d5c17f0bc75fede4c98b60530642f34d, type: 3}
   m_PrefabInstance: {fileID: 3275574605343958187}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &4534693623585099598 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1412822330527575013, guid: d5c17f0bc75fede4c98b60530642f34d, type: 3}
+  m_PrefabInstance: {fileID: 3275574605343958187}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6885092606384846385 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8284915225664000666, guid: d5c17f0bc75fede4c98b60530642f34d, type: 3}
@@ -88,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b6c7a3db587c7840a4932783fa73ef3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ContainerCounter
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 4534693623585099598}
   kitchenObjectSO: {fileID: 0}
 --- !u!1001 &4238614786366567080
 PrefabInstance:
@@ -198,7 +203,8 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 1a0afd856a35421469b28b916116fd9c, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6289625630049244101, guid: 9a9137fa2b035d34e881701d2c178192, type: 3}
     m_RemovedGameObjects:
     - {fileID: 5261771210811040880, guid: 9a9137fa2b035d34e881701d2c178192, type: 3}
     m_AddedGameObjects: []
