@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4614578654613272973}
-  - component: {fileID: 2492314033613015908}
+  - component: {fileID: 2401364590049991254}
   m_Layer: 0
   m_Name: CheeseSlices
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 5437648661014300362}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2492314033613015908
+--- !u!114 &2401364590049991254
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d320fe704433a848ab128f5f8a70a86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KitchenObjects
-  kitchenObjectSO: {fileID: 11400000, guid: 691043dec810db04793e0d04872c52c5, type: 2}
+  kitchenObjectSO: {fileID: 11400000, guid: b347977eb9f2b7a41b1d2da23628080a, type: 2}
 --- !u!1001 &9195338539273441354
 PrefabInstance:
   m_ObjectHideFlags: 0
