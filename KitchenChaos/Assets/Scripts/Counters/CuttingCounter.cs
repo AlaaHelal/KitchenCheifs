@@ -34,7 +34,15 @@ public class CuttingCounter : BaseCounter, IHasProgress {
                 // Player is not carrying anything
                 GetKitchenObject().SetKitchenObjectParent(player);
             } else {
-                // Player is carrying something = Do nothing  
+                // Player is plate
+                if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) {
+
+                    //give the KO to the plate then destroy it from the counter
+                    if (plateKitchenObject.TryAddIngredientsToPlate(GetKitchenObject().GetKichenObjectSO())) {
+
+                        GetKitchenObject().DestroySelf();
+                    }
+                }   
             }
         }
     }

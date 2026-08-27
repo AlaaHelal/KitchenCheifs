@@ -23,7 +23,25 @@ public class ClearCounter : BaseCounter {
                 // Player is not carrying anything
                 GetKitchenObject().SetKitchenObjectParent(player);
             } else {
-                // Player is carrying something = Do nothing  
+
+                // Player is carrying plate
+                if(player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) {
+
+                    //give the KO to the plate then destroy it from the counter
+                    if (plateKitchenObject.TryAddIngredientsToPlate(GetKitchenObject().GetKichenObjectSO())) {
+
+                        GetKitchenObject().DestroySelf();
+                    }
+                } else {
+                    //player is holding sth else not plate, give it to the plate
+                    if (GetKitchenObject().TryGetPlate(out plateKitchenObject)) {
+                        if (plateKitchenObject.TryAddIngredientsToPlate(player.GetKitchenObject().GetKichenObjectSO())) {
+
+                            player.GetKitchenObject().DestroySelf();
+                        }
+                    }   
+                }
+                
             }
         }
     }

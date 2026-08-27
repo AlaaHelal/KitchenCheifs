@@ -32,9 +32,9 @@ public class StoveCounter : BaseCounter, IHasProgress {
         state = State.Idle;
     }
     private void Update() {
-        if (HasKitchenObject()) {
+        //if (HasKitchenObject()) {
             switch (state) {
-               
+
                 case State.Idle:
                     progressNormalized = 0;
                     break;
@@ -46,37 +46,38 @@ public class StoveCounter : BaseCounter, IHasProgress {
 
                         GetKitchenObject().DestroySelf();
                         KitchenObjects.SpawnKichenObject(this, fryingRecipeSO.output);
-                        
+
                         burningRecipeSO = GetBurningRecipeWithInput(fryingRecipeSO.output);
                         burningTimer = 0;
                         state = State.Fried;
                     }
-                            break; 
+                    break;
                 case State.Fried:
                     progressNormalized = burningTimer / burningRecipeSO.burningTimerMax;
 
                     burningTimer += Time.deltaTime;
                     if (burningTimer > burningRecipeSO.burningTimerMax) {
-                        
+
                         GetKitchenObject().DestroySelf();
                         KitchenObjects.SpawnKichenObject(this, burningRecipeSO.output);
 
                         state = State.Burned;
 
                     }
-                    break; 
+                    break;
                 case State.Burned:
                     progressNormalized = 1;
                     break;
             }
-            onStateChanged?.Invoke(this, new OnStateChangedEventArgs {
-                state = state
-            });
-            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventHandler {
-                progressNormalized = progressNormalized
-            });
-        }
+                onStateChanged?.Invoke(this, new OnStateChangedEventArgs {
+                    state = state
+                });
+                OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventHandler {
+                    progressNormalized = progressNormalized
+                });
+        //} 
     }
+    
     
     public override void Interact(PlayerController player) {
         if (!HasKitchenObject()) {
@@ -103,10 +104,23 @@ public class StoveCounter : BaseCounter, IHasProgress {
             if (!player.HasKitchenObject()) {
                 // Player is not carrying anything
                 GetKitchenObject().SetKitchenObjectParent(player);
-                state = State.Idle;
+                //state = State.Idle;
+
             } else {
-                // Player is carrying something = Do nothing  
+                // Player is carrying something plate
+                if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) {
+
+                    //give the KO to the plate then destroy it from the counter
+                    if (plateKitchenObject.TryAddIngredientsToPlate(GetKitchenObject().GetKichenObjectSO())) {
+
+                        GetKitchenObject().DestroySelf();
+                        //state = State.Idle;
+                    }
+                }
+                
             }
+            state = State.Idle;
+
         }
     }
     private KitchenObjectsSO GetOuputForInput(KitchenObjectsSO kitchenObjectsSO) {
