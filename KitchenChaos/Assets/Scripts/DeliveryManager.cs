@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class DeliveryManager : MonoBehaviour
 {
+    public event System.EventHandler OnRecipeSpawned;
+    public event System.EventHandler OnRecipeCompleted;
     public static DeliveryManager Instance { get; private set; }
 
     [SerializeField] private _RecipeListSO recipesSOList;
@@ -41,7 +43,7 @@ public class DeliveryManager : MonoBehaviour
     private void SpawnRecipe() {
         RecipeSO waitingRecipeSO = recipesSOList.recipesSOList[Random.Range(0, recipesSOList.recipesSOList.Count)];
         waitingRecipesSOList.Add(waitingRecipeSO);
-        Debug.Log("Recipe spawned: " + waitingRecipeSO.name);
+        OnRecipeSpawned.Invoke(this, System.EventArgs.Empty);
     }
 
 
@@ -65,8 +67,6 @@ public class DeliveryManager : MonoBehaviour
                     foreach (KitchenObjectsSO kitchenObjectPlateSO in plateKitchenObject.GetKitchenObjectsSOList()) {
                         //Check if the ingredient in the recipe is the same as the ingredient in the plate
                         if (kitchenObjectRecipeSO == kitchenObjectPlateSO) {
-                            Debug.Log("Kitchen Object: " + kitchenObjectRecipeSO.objectName + 
-                                " is in the recipe and on the plate");
                             ingredientFound = true;
                             break;
                         }
@@ -80,14 +80,18 @@ public class DeliveryManager : MonoBehaviour
 
                 if (plateContentsMatchRecipe) {
                     //Player delivered the correct recipe
-                    Debug.Log("Player delivered the correct recipe: " + recipeSO.name);
                     waitingRecipesSOList.RemoveAt(i);
+                    OnRecipeCompleted.Invoke(this, System.EventArgs.Empty);
                     return;
                 }
             }
         }
         //No matching recipe was found
         //Player did not deliver the correct recipe
-        Debug.Log("Player did not deliver the correct recipe");
+       
+    }
+
+    public List<RecipeSO> GetWaitingRecipesSOList() {
+        return waitingRecipesSOList;
     }
 }

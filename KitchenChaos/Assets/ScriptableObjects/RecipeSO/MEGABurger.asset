@@ -18,4 +18,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b347977eb9f2b7a41b1d2da23628080a, type: 2}
   - {fileID: 11400000, guid: d6fd2c134243ab847a973104f43e826f, type: 2}
   - {fileID: 11400000, guid: 536d34cfb3edd3d4fb9e753fabf9f26c, type: 2}
-  name: MEGABurger
+  nameOfRecipe: MEGA Burger
