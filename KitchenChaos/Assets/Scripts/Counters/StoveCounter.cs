@@ -4,9 +4,10 @@ using static CuttingCounter;
 
 public class StoveCounter : BaseCounter, IHasProgress {
 
+    //public static StoveCounter Instance { get; private set; }
     public event EventHandler<IHasProgress.OnProgressChangedEventHandler> OnProgressChanged;
 
-    public event EventHandler<OnStateChangedEventArgs> onStateChanged;
+    public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
     public class OnStateChangedEventArgs : EventArgs {
         public State state;
     }
@@ -14,6 +15,8 @@ public class StoveCounter : BaseCounter, IHasProgress {
     [SerializeField] private FryingRecipeSO[] fryingRecipeSOArray;
     [SerializeField] private BurningRecipeSO[] burningRecipeSOArray;
 
+    private State state;
+    private State previousState;
     private float progressNormalized;
     private float fryingTimer;
     private float burningTimer;
@@ -26,8 +29,8 @@ public class StoveCounter : BaseCounter, IHasProgress {
         Fried,
         Burned
     }
-    private State state;
 
+    
     private void Start() {
         state = State.Idle;
     }
@@ -69,13 +72,16 @@ public class StoveCounter : BaseCounter, IHasProgress {
                     progressNormalized = 1;
                     break;
             }
-                onStateChanged?.Invoke(this, new OnStateChangedEventArgs {
+            if (state != previousState) {
+                previousState = state;
+                OnStateChanged?.Invoke(this, new OnStateChangedEventArgs {
                     state = state
                 });
-                OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventHandler {
+            }
+            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventHandler {
                     progressNormalized = progressNormalized
                 });
-        //} 
+        
     }
     
     

@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent {
     [SerializeField] private LayerMask interactLayerMask;
     [SerializeField] private Transform kitchenObjectHoldPoint;
 
+    public event EventHandler OnObjectPickedUp;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs {
         public BaseCounter selectedCounter;
@@ -50,9 +51,12 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent {
 
         //Handle interactions
         HandlInteractions();
+
+
     }
 
     public bool IsWalking() {
+        
         return isWalking;
     }
 
@@ -103,6 +107,8 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent {
 
         // Update the walking state
         isWalking = movDir != Vector3.zero;
+
+        
     }
 
     private void HandlInteractions() {
@@ -143,8 +149,12 @@ public class PlayerController : MonoBehaviour, IKitchenObjectParent {
         return kitchenObjectHoldPoint;
     }
 
+    //This Method for the kitchen object the player is holding
     public void SetKichenObject(KitchenObjects kichenObject) {
         this.kitchenObject = kichenObject;
+        if (kitchenObject != null) {
+            OnObjectPickedUp?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public KitchenObjects GetKitchenObject() {
