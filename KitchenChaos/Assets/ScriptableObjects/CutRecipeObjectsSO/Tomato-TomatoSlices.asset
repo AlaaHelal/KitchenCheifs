@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dacf7e6f239b505419ad601fe3c301dc, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cb1efe523d8a5b4f85d888a21300813, type: 3}
   m_Name: Tomato-TomatoSlices
   m_EditorClassIdentifier: Assembly-CSharp::CutRecipeSO
   input: {fileID: 11400000, guid: 691043dec810db04793e0d04872c52c5, type: 2}
