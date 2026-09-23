@@ -21,5 +21,7 @@ public class MainMenuUI : MonoBehaviour
 #endif
 
         });
+
+        Time.timeScale = 1.0f;
     }
 }

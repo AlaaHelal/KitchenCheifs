@@ -4,16 +4,23 @@ using UnityEngine.UIElements;
 
 public class SoundManager : MonoBehaviour
 {
+    private const string PLAYER_PREFS_SOUND_EFFECTS_VOLUME = "SoundEffectsVolume";
     public static SoundManager Instance;
+
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
+
+    private float volume = 1f;
+
 
     private void Awake() {
         Instance = this;
+
+        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1f);                              
     }
 
     private void Start() {
-        DeliveryManager.Instance.OnDeliveryFailed += DeliveryManager_onDeliveryFailed;
-        DeliveryManager.Instance.OnDeliverySuccessed += DeliveryManager_onDeliverySuccessed;
+        DeliveryManager.Instance.OnDeliveryFailed += DeliveryManager_OnDeliveryFailed;
+        DeliveryManager.Instance.OnDeliverySuccessed += DeliveryManager_OnDeliverySuccessed;
         CuttingCounter.OnAnyCut += CuttingCounter_OnAnyCut;
         PlayerController.Instance.OnObjectPickedUp += Player_OnObjectPickedUp;
         BaseCounter.OnObjectDropped += BaseCounter_OnObjectDropped;
@@ -51,24 +58,38 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    private void DeliveryManager_onDeliverySuccessed(object sender, System.EventArgs e) {
+    private void DeliveryManager_OnDeliverySuccessed(object sender, System.EventArgs e) {
         DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
         PlaySound(audioClipRefsSO.deliverySuccessed, deliveryCounter.transform.position);
     }
 
-    private void DeliveryManager_onDeliveryFailed(object sender, System.EventArgs e) {
+    private void DeliveryManager_OnDeliveryFailed(object sender, System.EventArgs e) {
         DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
         PlaySound(audioClipRefsSO.deliveryFailed, deliveryCounter.transform.position);
     }
 
-    private void PlaySound(AudioClip[] clipsArray, Vector3 position, float volume = 1.0f) {
-        AudioSource.PlayClipAtPoint(clipsArray[Random.Range(0,clipsArray.Length )], position,volume);
+    private void PlaySound(AudioClip[] clipsArray, Vector3 position, float volumeMultiplier = 1.0f) {
+        AudioSource.PlayClipAtPoint(clipsArray[Random.Range(0,clipsArray.Length )], position,volumeMultiplier * volume);
 
     }
 
     public void PlayFootStepsSound() {
         AudioClip footStepsClip = audioClipRefsSO.footSteps[Random.Range(0, audioClipRefsSO.footSteps.Length)];
-        float volume = 1.0f;
+        float volume = this.volume;
         AudioSource.PlayClipAtPoint(footStepsClip, PlayerController.Instance.transform.position, volume);
+    }
+
+
+    public void ChangeVolume() {
+        volume += 0.1f;
+        if(volume > 1f) {
+            volume = 0f;
+        }
+        PlayerPrefs.SetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, volume);
+        PlayerPrefs.Save();
+    }
+
+    public float GetVolume() {
+        return volume;
     }
 }

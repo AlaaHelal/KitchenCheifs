@@ -4,6 +4,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     public event EventHandler OnStateChanged;
+    public event EventHandler OnGamePaused;
+    public event EventHandler OnGameUnPaused;
     public static GameManager Instance;
     public enum State {
         WaitingToStart,
@@ -17,6 +19,7 @@ public class GameManager : MonoBehaviour {
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
     private float gamePlayingTimerMax = 60f;
+    private bool isGamePaused = false;
 
 
 
@@ -24,7 +27,17 @@ public class GameManager : MonoBehaviour {
         state = State.WaitingToStart;
         Instance = this;
     }
+
+    private void Start() {
+        InputManager.Instance.OnPauseAction += InputManager_OnPauseAction;
+    }
+
+    private void InputManager_OnPauseAction(object sender, EventArgs e) {
+        TogglePauseGame();
+    }
+
     
+
     private void Update() {
         switch (state) {
             case State.WaitingToStart:
@@ -69,5 +82,17 @@ public class GameManager : MonoBehaviour {
     }
     public float GetGamePlayingTimer() {
         return 1- (gamePlayingTimer/gamePlayingTimerMax);
+    }
+
+    private void TogglePauseGame() {
+        isGamePaused = !isGamePaused;
+        if (isGamePaused) {
+            Time.timeScale = 0f;
+            OnGamePaused?.Invoke(this, EventArgs.Empty);
+        } else {
+            Time.timeScale = 1f;
+            OnGameUnPaused?.Invoke(this, EventArgs.Empty);
+
+        }
     }
 }
